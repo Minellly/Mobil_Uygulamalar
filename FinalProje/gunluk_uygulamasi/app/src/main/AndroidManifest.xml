@@ -1,5 +1,18 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.example.gunluk_uygulamasi">
+
+    <!-- 📸 Kamera kullanımı için gerekli izin -->
+    <uses-permission android:name="android.permission.CAMERA" />
+
+    <!-- 📝 Eski sürümler için dış belleğe yazma izni -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:maxSdkVersion="28" />
+
+    <!-- 📂 Galeriden okuma (isteğe bağlı, Android 10+ için) -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
+    <uses-feature android:name="android.hardware.camera" android:required="false" />
 
     <application
         android:allowBackup="true"
@@ -12,7 +25,18 @@
         android:theme="@style/Theme.Gunluk_uygulamasi"
         tools:targetApi="31">
 
-        <!-- LoginActivity artık uygulama açıldığında çalışacak -->
+        <!-- 📦 Fotoğraf çekiminde dosya paylaşımı için gerekli FileProvider -->
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.provider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
+
+        <!-- Giriş ekranı -->
         <activity
             android:name=".LoginActivity"
             android:exported="true">
@@ -22,13 +46,12 @@
             </intent-filter>
         </activity>
 
+        <!-- Günlük ekleme ekranı -->
         <activity
             android:name=".AddDailyActivity"
             android:exported="false" />
 
-        <!-- DailyTitleAdapter bir activity değil, bu satırı silebilirsin -->
-        <!-- <activity android:name=".DailyTitleAdapter" ... /> -->
-
+        <!-- Ana ekran -->
         <activity
             android:name=".MainActivity"
             android:exported="false" />

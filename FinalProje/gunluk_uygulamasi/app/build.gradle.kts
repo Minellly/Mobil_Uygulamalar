@@ -8,7 +8,7 @@ android {
 
     defaultConfig {
         applicationId = "com.example.gunluk_uygulamasi"
-        minSdk = 34
+        minSdk = 29
         targetSdk = 35
         versionCode = 1
         versionName = "1.0"

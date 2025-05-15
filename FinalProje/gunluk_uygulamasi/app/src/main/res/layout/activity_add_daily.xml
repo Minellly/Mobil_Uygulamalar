@@ -22,8 +22,12 @@
             android:id="@+id/imageView2"
             android:layout_width="137dp"
             android:layout_height="109dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
             android:layout_alignParentEnd="true"
             android:layout_alignParentBottom="true"
+            android:layout_marginStart="260dp"
+            android:layout_marginTop="472dp"
             android:layout_marginEnd="14dp"
             android:layout_marginBottom="150dp"
             app:srcCompat="@drawable/icon2" />
@@ -52,11 +56,26 @@
             android:layout_alignParentStart="true"
             android:layout_alignParentEnd="true"
             android:layout_alignParentBottom="true"
-            android:layout_marginStart="150dp"
-            android:layout_marginEnd="156dp"
-            android:layout_marginBottom="11dp"
+            android:layout_marginStart="70dp"
+            android:layout_marginEnd="236dp"
+            android:layout_marginBottom="6dp"
             android:backgroundTint="#EB85A7"
             android:text="Kaydet" />
+
+        <Button
+            android:id="@+id/camerabutton"
+            android:layout_width="105dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="234dp"
+            android:layout_marginTop="677dp"
+            android:layout_marginEnd="70dp"
+            android:layout_marginBottom="6dp"
+            android:backgroundTint="#EB85A7"
+            android:text="Çekim" />
 
     </RelativeLayout>
 
