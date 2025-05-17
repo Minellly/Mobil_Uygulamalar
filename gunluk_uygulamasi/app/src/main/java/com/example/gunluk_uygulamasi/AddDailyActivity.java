@@ -33,6 +33,7 @@ public class AddDailyActivity extends AppCompatActivity {
     private Button saveButton;
     private Button cameraButton;
     private Button deleteButton;
+    private Button backButton; // geri butonu
     private ImageView imageView;
     private DatabaseHelper dbHelper;
 
@@ -49,12 +50,21 @@ public class AddDailyActivity extends AppCompatActivity {
 
         dbHelper = new DatabaseHelper(this);
 
-        titleEditText = findViewById(R.id.titleEditText); // Yeni başlık alanı
+        titleEditText = findViewById(R.id.titleEditText);
         dailyEntryEditText = findViewById(R.id.dailyEntryEditText);
         saveButton = findViewById(R.id.saveButton);
         cameraButton = findViewById(R.id.camerabutton);
         deleteButton = findViewById(R.id.delete_btn);
+        backButton = findViewById(R.id.btn_geri); // geri butonunu tanıdık
         imageView = findViewById(R.id.imageView2);
+
+        // Geri butonuna tıklanınca MainActivity'ye dön
+        backButton.setOnClickListener(v -> {
+            Intent intent = new Intent(AddDailyActivity.this, MainActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
+            finish();
+        });
 
         // Kamera izni kontrolü
         if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.CAMERA)
@@ -64,18 +74,16 @@ public class AddDailyActivity extends AppCompatActivity {
                     REQUEST_CAMERA_PERMISSION);
         }
 
-        // Başlık geldi mi?
+        // Günlük güncelleme mi?
         titleFromIntent = getIntent().getStringExtra("title");
         if (titleFromIntent != null) {
-            // Mevcut günlük içeriğini yükle
             String content = dbHelper.getEntryByTitle(titleFromIntent);
             dailyEntryEditText.setText(content);
             titleEditText.setText(titleFromIntent);
-            titleEditText.setEnabled(false); // Başlık düzenlenemez
+            titleEditText.setEnabled(false); // başlık değişmesin
             saveButton.setText("Güncelle");
             deleteButton.setVisibility(View.VISIBLE);
 
-            // Sil butonu
             deleteButton.setOnClickListener(v -> {
                 new AlertDialog.Builder(this)
                         .setTitle("Günlüğü silmek istediğine emin misin?")
@@ -92,7 +100,7 @@ public class AddDailyActivity extends AppCompatActivity {
                         .show();
             });
         } else {
-            deleteButton.setVisibility(View.GONE); // Yeni günlükte sil butonu görünmez
+            deleteButton.setVisibility(View.GONE);
         }
 
         // Kaydet / Güncelle
