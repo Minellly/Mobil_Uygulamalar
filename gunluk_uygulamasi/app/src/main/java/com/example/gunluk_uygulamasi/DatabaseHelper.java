@@ -32,25 +32,31 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     "username TEXT UNIQUE, " +
                     "password TEXT);";
 
-
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
-
-
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL(TABLE_CREATE); // Günlükler tablosu
-        db.execSQL(USER_TABLE_CREATE); // Kullanıcılar tablosu
+        db.execSQL(TABLE_CREATE);         // Günlükler tablosu
+        db.execSQL(USER_TABLE_CREATE);    // Kullanıcılar tablosu
     }
 
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS users");
         onCreate(db);
     }
+
+    // 🔴 Günlüğü başlığa göre sil
+    public void deleteDailyEntry(String title) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(TABLE_NAME, COLUMN_TITLE + " = ?", new String[]{title});
+        db.close();
+    }
+
 
     // Günlük kaydetme işlemi
     public void insertDailyEntry(String title, String entry) {
@@ -62,7 +68,30 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.close();
     }
 
-    // Yeni kullanıcı kaydet
+    // 🔹 Başlığa göre günlük içeriğini getir
+    public String getEntryByTitle(String title) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT " + COLUMN_ENTRY + " FROM " + TABLE_NAME +
+                " WHERE " + COLUMN_TITLE + " = ?", new String[]{title});
+
+        if (cursor != null && cursor.moveToFirst()) {
+            @SuppressLint("Range") String entry = cursor.getString(cursor.getColumnIndex(COLUMN_ENTRY));
+            cursor.close();
+            return entry;
+        }
+        return "";
+    }
+
+    // 🔹 Günlüğü güncelle
+    public void updateDailyEntry(String title, String newEntry) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_ENTRY, newEntry);
+        db.update(TABLE_NAME, values, COLUMN_TITLE + " = ?", new String[]{title});
+        db.close();
+    }
+
+    // 🔹 Yeni kullanıcı kaydet
     public boolean registerUser(String username, String password) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -73,7 +102,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return result != -1;
     }
 
-    // Kullanıcı bilgilerini kontrol et
+    // 🔹 Kullanıcı bilgilerini kontrol et
     public boolean checkUser(String username, String password) {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery("SELECT * FROM users WHERE username=? AND password=?", new String[]{username, password});
@@ -83,8 +112,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return exists;
     }
 
-
-    // Veritabanındaki tüm başlıkları alıyoruz
+    // 🔹 Veritabanındaki tüm başlıkları al
     public List<String> getAllTitles() {
         List<String> titles = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
@@ -96,6 +124,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             } while (cursor.moveToNext());
             cursor.close();
         }
+        db.close();
         return titles;
     }
 }

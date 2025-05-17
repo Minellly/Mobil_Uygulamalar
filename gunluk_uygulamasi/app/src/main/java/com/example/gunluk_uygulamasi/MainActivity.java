@@ -55,7 +55,8 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         dailyTitles = dbHelper.getAllTitles(); // Veritabanından başlıkları alıyoruz
-        adapter = new DailyTitleAdapter(dailyTitles);
+        adapter = new DailyTitleAdapter(MainActivity.this, dailyTitles);
         recyclerView.setAdapter(adapter);
+
     }
 }

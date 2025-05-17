@@ -35,13 +35,13 @@
         <EditText
             android:id="@+id/dailyEntryEditText"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="454dp"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
             android:layout_alignParentEnd="true"
             android:layout_alignParentBottom="true"
             android:layout_marginStart="0dp"
-            android:layout_marginTop="87dp"
+            android:layout_marginTop="148dp"
             android:layout_marginEnd="0dp"
             android:layout_marginBottom="129dp"
             android:background="@null"
@@ -56,9 +56,9 @@
             android:layout_alignParentStart="true"
             android:layout_alignParentEnd="true"
             android:layout_alignParentBottom="true"
-            android:layout_marginStart="70dp"
-            android:layout_marginEnd="236dp"
-            android:layout_marginBottom="6dp"
+            android:layout_marginStart="34dp"
+            android:layout_marginEnd="272dp"
+            android:layout_marginBottom="8dp"
             android:backgroundTint="#EB85A7"
             android:text="Kaydet" />
 
@@ -70,12 +70,44 @@
             android:layout_alignParentTop="true"
             android:layout_alignParentEnd="true"
             android:layout_alignParentBottom="true"
-            android:layout_marginStart="234dp"
-            android:layout_marginTop="677dp"
-            android:layout_marginEnd="70dp"
-            android:layout_marginBottom="6dp"
+            android:layout_marginStart="280dp"
+            android:layout_marginTop="675dp"
+            android:layout_marginEnd="24dp"
+            android:layout_marginBottom="8dp"
             android:backgroundTint="#EB85A7"
-            android:text="Çekim" />
+            android:text="Fotoğraf" />
+
+        <Button
+            android:id="@+id/delete_btn"
+            android:layout_width="105dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="159dp"
+            android:layout_marginTop="676dp"
+            android:layout_marginEnd="145dp"
+            android:layout_marginBottom="7dp"
+            android:backgroundTint="#EB85A7"
+            android:text="Sil" />
+
+        <EditText
+            android:id="@+id/titleEditText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="18dp"
+            android:layout_marginTop="76dp"
+            android:layout_marginEnd="183dp"
+            android:layout_marginBottom="610dp"
+            android:background="@null"
+            android:ems="10"
+            android:hint="Başlık"
+            android:inputType="text" />
 
     </RelativeLayout>
 
