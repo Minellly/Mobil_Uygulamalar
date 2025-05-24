@@ -1,86 +1,142 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
+    android:id="@+id/pinLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/login"
     tools:context=".LoginActivity">
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@drawable/backgorund"
-        app:layout_constraintBottom_toBottomOf="parent"
+    <TextView
+        android:id="@+id/pinDots"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="100dp"
+        android:text="○ ○ ○ ○"
+        android:textColor="#FFFFFF"
+        android:textSize="36sp"
+        android:textStyle="bold"
+        android:visibility="visible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <GridLayout
+        android:id="@+id/numberPad"
+        android:layout_width="311dp"
+        android:layout_height="387dp"
+        android:layout_marginTop="68dp"
+        android:alignmentMode="alignMargins"
+        android:columnCount="3"
+        android:rowCount="4"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <!-- Diğer UI bileşenlerin buraya gelecek -->
-
-        <EditText
-            android:id="@+id/etUsername"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentBottom="true"
-            android:layout_marginStart="86dp"
-            android:layout_marginTop="257dp"
-            android:layout_marginEnd="114dp"
-            android:layout_marginBottom="428dp"
-            android:background="@null"
-            android:ems="10"
-            android:hint="Name:"
-            android:inputType="text" />
+        app:layout_constraintTop_toBottomOf="@id/pinDots">
 
         <Button
-            android:id="@+id/btnRegister"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentBottom="true"
-            android:layout_marginStart="217dp"
-            android:layout_marginTop="434dp"
-            android:layout_marginEnd="92dp"
-            android:layout_marginBottom="249dp"
-            android:backgroundTint="#BB7B7C"
-            android:text="Register" />
+            android:id="@+id/btn1"
+            style="@style/PinButtonStyle"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:backgroundTint="#80FFFFFF"
+
+            android:text="1" />
 
         <Button
-            android:id="@+id/btnLogin"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentBottom="true"
-            android:layout_marginStart="88dp"
-            android:layout_marginTop="432dp"
-            android:layout_marginEnd="235dp"
-            android:layout_marginBottom="251dp"
-            android:backgroundTint="#BB7B7C"
-            android:text="Login" />
+            android:id="@+id/btn2"
+            style="@style/PinButtonStyle"
+            android:backgroundTint="#80FFFFFF"
 
-        <EditText
-            android:id="@+id/etPassword"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentBottom="true"
-            android:layout_marginStart="150dp"
-            android:layout_marginTop="316dp"
-            android:layout_marginEnd="51dp"
-            android:layout_marginBottom="370dp"
-            android:background="@null"
-            android:ems="10"
-            android:hint="Password:"
-            android:inputType="text" />
-    </RelativeLayout>
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:text="2" />
 
+        <Button
+            android:id="@+id/btn3"
+            style="@style/PinButtonStyle"
+            android:layout_width="80dp"
+            android:backgroundTint="#80FFFFFF"
+
+            android:layout_height="80dp"
+            android:text="3" />
+
+        <Button
+            android:id="@+id/btn4"
+            style="@style/PinButtonStyle"
+            android:layout_width="80dp"
+            android:backgroundTint="#80FFFFFF"
+
+            android:layout_height="80dp"
+            android:text="4" />
+
+        <Button
+            android:id="@+id/btn5"
+            style="@style/PinButtonStyle"
+            android:layout_width="80dp"
+            android:backgroundTint="#80FFFFFF"
+
+            android:layout_height="80dp"
+            android:text="5" />
+
+        <Button
+            android:id="@+id/btn6"
+            style="@style/PinButtonStyle"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:backgroundTint="#80FFFFFF"
+
+            android:text="6" />
+
+        <Button
+            android:id="@+id/btn7"
+            style="@style/PinButtonStyle"
+            android:layout_width="80dp"
+            android:backgroundTint="#80FFFFFF"
+
+            android:layout_height="80dp"
+            android:text="7" />
+
+        <Button
+            android:id="@+id/btn8"
+            style="@style/PinButtonStyle"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:backgroundTint="#80FFFFFF"
+
+            android:text="8" />
+
+        <Button
+            android:id="@+id/btn9"
+            style="@style/PinButtonStyle"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:backgroundTint="#80FFFFFF"
+
+            android:text="9" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp" />
+
+        <Button
+            android:id="@+id/btn0"
+            style="@style/PinButtonStyle"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:backgroundTint="#80FFFFFF"
+
+            android:text="0" />
+
+        <Button
+            android:id="@+id/btnDel"
+            style="@style/PinButtonStyle"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:backgroundTint="#80FFFFFF"
+            android:text="←" />
+
+    </GridLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

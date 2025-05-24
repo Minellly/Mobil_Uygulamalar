@@ -26,6 +26,13 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+
+
 public class AddDailyActivity extends AppCompatActivity {
 
     private EditText titleEditText;
@@ -33,11 +40,12 @@ public class AddDailyActivity extends AppCompatActivity {
     private Button saveButton;
     private Button cameraButton;
     private Button deleteButton;
-    private Button backButton; // geri butonu
+    private Button backButton;
     private ImageView imageView;
     private DatabaseHelper dbHelper;
 
     private static final int REQUEST_IMAGE_CAPTURE = 1;
+    private static final int REQUEST_GALLERY_PICK = 2;
     private static final int REQUEST_CAMERA_PERMISSION = 100;
     private String currentPhotoPath;
 
@@ -55,15 +63,17 @@ public class AddDailyActivity extends AppCompatActivity {
         saveButton = findViewById(R.id.saveButton);
         cameraButton = findViewById(R.id.camerabutton);
         deleteButton = findViewById(R.id.delete_btn);
-        backButton = findViewById(R.id.btn_geri); // geri butonunu tanıdık
+        backButton = findViewById(R.id.btn_geri);
         imageView = findViewById(R.id.imageView2);
 
-        // Geri butonuna tıklanınca MainActivity'ye dön
+        // Geri dön
         backButton.setOnClickListener(v -> {
-            Intent intent = new Intent(AddDailyActivity.this, MainActivity.class);
+            Intent intent = new Intent(this, MainActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
             finish();
+
+
         });
 
         // Kamera izni kontrolü
@@ -74,15 +84,22 @@ public class AddDailyActivity extends AppCompatActivity {
                     REQUEST_CAMERA_PERMISSION);
         }
 
-        // Günlük güncelleme mi?
+        // Günlük düzenleme mi?
         titleFromIntent = getIntent().getStringExtra("title");
         if (titleFromIntent != null) {
             String content = dbHelper.getEntryByTitle(titleFromIntent);
+            String savedPhotoPath = dbHelper.getPhotoPathByTitle(titleFromIntent);
             dailyEntryEditText.setText(content);
             titleEditText.setText(titleFromIntent);
-            titleEditText.setEnabled(false); // başlık değişmesin
+            titleEditText.setEnabled(false);
             saveButton.setText("Güncelle");
             deleteButton.setVisibility(View.VISIBLE);
+
+            if (savedPhotoPath != null && new File(savedPhotoPath).exists()) {
+                imageView.setImageURI(Uri.fromFile(new File(savedPhotoPath)));
+                currentPhotoPath = savedPhotoPath;
+            }
+
 
             deleteButton.setOnClickListener(v -> {
                 new AlertDialog.Builder(this)
@@ -91,9 +108,7 @@ public class AddDailyActivity extends AppCompatActivity {
                         .setPositiveButton("Evet", (dialog, which) -> {
                             dbHelper.deleteDailyEntry(titleFromIntent);
                             Toast.makeText(this, "Günlük silindi", Toast.LENGTH_SHORT).show();
-                            Intent intent = new Intent(this, MainActivity.class);
-                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                            startActivity(intent);
+                            startActivity(new Intent(this, MainActivity.class));
                             finish();
                         })
                         .setNegativeButton("İptal", null)
@@ -119,22 +134,37 @@ public class AddDailyActivity extends AppCompatActivity {
             }
 
             if (titleFromIntent == null) {
-                dbHelper.insertDailyEntry(title, entry);
+                // Yeni günlük
+                dbHelper.insertDailyEntry(title, entry, currentPhotoPath);
                 Toast.makeText(this, "Günlük kaydedildi!", Toast.LENGTH_SHORT).show();
             } else {
-                dbHelper.updateDailyEntry(titleFromIntent, entry);
+                // Güncelleme (✅ artık fotoğraf da güncelleniyor)
+                dbHelper.updateDailyEntry(titleFromIntent, entry, currentPhotoPath);
                 Toast.makeText(this, "Günlük güncellendi!", Toast.LENGTH_SHORT).show();
             }
 
-            Intent intent = new Intent(this, MainActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            startActivity(intent);
+            startActivity(new Intent(this, MainActivity.class));
             finish();
         });
 
-        // Kamera butonu
-        cameraButton.setOnClickListener(v -> dispatchTakePictureIntent());
+
+        // Kamera veya Galeri Seçimi
+        cameraButton.setOnClickListener(v -> {
+            String[] options = {"Kamera ile çek", "Galeriden seç"};
+
+            new AlertDialog.Builder(this)
+                    .setTitle("Fotoğraf Ekle")
+                    .setItems(options, (dialog, which) -> {
+                        if (which == 0) {
+                            dispatchTakePictureIntent();
+                        } else {
+                            openGalleryToPickImage();
+                        }
+                    })
+                    .show();
+        });
     }
+
 
     private void dispatchTakePictureIntent() {
         Log.d("KAMERA", "dispatchTakePictureIntent çağrıldı");
@@ -147,18 +177,17 @@ public class AddDailyActivity extends AppCompatActivity {
 
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-            File photoFile = null;
+            File photoFile;
             try {
                 photoFile = createImageFile();
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
-            if (photoFile != null) {
-                Uri photoURI = FileProvider.getUriForFile(this,
-                        getPackageName() + ".provider",
-                        photoFile);
-                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
-                startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+                if (photoFile != null) {
+                    Uri photoURI = FileProvider.getUriForFile(this,
+                            getPackageName() + ".provider", photoFile);
+                    takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                    startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         }
     }
@@ -172,6 +201,12 @@ public class AddDailyActivity extends AppCompatActivity {
         return image;
     }
 
+    private void openGalleryToPickImage() {
+        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        intent.setType("image/*");
+        startActivityForResult(intent, REQUEST_GALLERY_PICK);
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -183,6 +218,20 @@ public class AddDailyActivity extends AppCompatActivity {
                 imageView.setImageURI(Uri.fromFile(imgFile));
             }
         }
+
+        if (requestCode == REQUEST_GALLERY_PICK && resultCode == RESULT_OK && data != null) {
+            Uri selectedImageUri = data.getData();
+            if (selectedImageUri != null) {
+                String copiedPath = copyImageToInternalStorage(selectedImageUri);
+                if (copiedPath != null) {
+                    imageView.setImageURI(Uri.fromFile(new File(copiedPath)));
+                    currentPhotoPath = copiedPath;
+                } else {
+                    Toast.makeText(this, "Fotoğraf kopyalanamadı", Toast.LENGTH_SHORT).show();
+                }
+            }
+        }
+
     }
 
     @Override
@@ -197,4 +246,31 @@ public class AddDailyActivity extends AppCompatActivity {
             }
         }
     }
+
+    // AddDailyActivity.java içindeyken, sınıfın en altına şunu ekle:
+    private String copyImageToInternalStorage(Uri uri) {
+        try {
+            InputStream inputStream = getContentResolver().openInputStream(uri);
+            if (inputStream == null) return null;
+
+            String fileName = "IMG_" + System.currentTimeMillis() + ".jpg";
+            File file = new File(getExternalFilesDir(Environment.DIRECTORY_PICTURES), fileName);
+            OutputStream outputStream = new FileOutputStream(file);
+
+            byte[] buffer = new byte[4096];
+            int length;
+            while ((length = inputStream.read(buffer)) > 0) {
+                outputStream.write(buffer, 0, length);
+            }
+
+            outputStream.close();
+            inputStream.close();
+
+            return file.getAbsolutePath();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
 }

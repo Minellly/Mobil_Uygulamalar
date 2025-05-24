@@ -2,16 +2,20 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.example.gunluk_uygulamasi">
 
-    <!-- 📸 Kamera kullanımı için gerekli izin -->
+    <!-- 📸 Kamera kullanımı -->
     <uses-permission android:name="android.permission.CAMERA" />
 
-    <!-- 📝 Eski sürümler için dış belleğe yazma izni -->
+    <!-- 📝 Eski sürümler için dış belleğe yazma -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
         android:maxSdkVersion="28" />
 
-    <!-- 📂 Galeriden okuma (isteğe bağlı, Android 10+ için) -->
+    <!-- 📂 Galeriden okuma -->
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
+    <!-- ✅ Titreşim izni -->
+    <uses-permission android:name="android.permission.VIBRATE" />
+
+    <!-- 📷 Donanım özelliği -->
     <uses-feature android:name="android.hardware.camera" android:required="false" />
 
     <application
@@ -25,7 +29,7 @@
         android:theme="@style/Theme.Gunluk_uygulamasi"
         tools:targetApi="31">
 
-        <!-- 📦 Fotoğraf çekiminde dosya paylaşımı için gerekli FileProvider -->
+        <!-- 📦 FileProvider (kamera fotoğrafı için) -->
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.provider"
@@ -36,7 +40,7 @@
                 android:resource="@xml/file_paths" />
         </provider>
 
-        <!-- Giriş ekranı -->
+        <!-- 🔐 Giriş ekranı -->
         <activity
             android:name=".LoginActivity"
             android:exported="true">
@@ -46,12 +50,12 @@
             </intent-filter>
         </activity>
 
-        <!-- Günlük ekleme ekranı -->
+        <!-- 📓 Günlük ekleme/düzenleme -->
         <activity
             android:name=".AddDailyActivity"
             android:exported="false" />
 
-        <!-- Ana ekran -->
+        <!-- 🏠 Ana ekran -->
         <activity
             android:name=".MainActivity"
             android:exported="false" />
