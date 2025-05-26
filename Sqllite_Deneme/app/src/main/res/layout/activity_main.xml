@@ -24,7 +24,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="8dp"
         android:ems="10"
         android:inputType="text"
         android:text="Soyad"
@@ -36,7 +36,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="8dp"
         android:ems="10"
         android:inputType="text"
         android:text="Yas"
@@ -48,7 +48,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="8dp"
         android:ems="10"
         android:inputType="text"
         android:text="Sehir"
@@ -59,37 +59,37 @@
         android:id="@+id/buttonKayit"
         android:layout_width="235dp"
         android:layout_height="49dp"
-        android:layout_marginTop="36dp"
+        android:layout_marginTop="28dp"
         android:text="Kayıt ekle"
         app:layout_constraintTop_toBottomOf="@+id/editTextSehir"
-        tools:layout_editor_absoluteX="32dp" />
+        tools:layout_editor_absoluteX="9dp" />
 
     <Button
         android:id="@+id/buttonGoster"
         android:layout_width="241dp"
         android:layout_height="54dp"
-        android:layout_marginTop="28dp"
+        android:layout_marginTop="4dp"
         android:text="Kayıt göster"
         app:layout_constraintTop_toBottomOf="@+id/buttonKayit"
-        tools:layout_editor_absoluteX="32dp" />
+        tools:layout_editor_absoluteX="10dp" />
 
     <Button
         android:id="@+id/buttonSil"
         android:layout_width="248dp"
         android:layout_height="54dp"
-        android:layout_marginTop="28dp"
+        android:layout_marginTop="8dp"
         android:text="Kayıt sil"
         app:layout_constraintTop_toBottomOf="@+id/buttonGoster"
-        tools:layout_editor_absoluteX="32dp" />
+        tools:layout_editor_absoluteX="9dp" />
 
     <Button
         android:id="@+id/buttonGuncelle"
         android:layout_width="246dp"
         android:layout_height="47dp"
-        android:layout_marginTop="28dp"
+        android:layout_marginTop="4dp"
         android:text="Kayıt güncelle"
         app:layout_constraintTop_toBottomOf="@+id/buttonSil"
-        tools:layout_editor_absoluteX="32dp" />
+        tools:layout_editor_absoluteX="9dp" />
 
     <TextView
         android:id="@+id/textViewBilgiler"
