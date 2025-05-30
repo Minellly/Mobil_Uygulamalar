@@ -13,18 +13,25 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+/**
+ * DatabaseHelper sınıfı, SQLite veritabanı işlemlerini yöneten yardımcı bir sınıftır.
+ * Günlük kayıtları ve kullanıcı bilgilerini veritabanında saklamak için kullanılır.
+ */
 public class DatabaseHelper extends SQLiteOpenHelper {
 
+    // Veritabanı adı ve sürümü
     private static final String DATABASE_NAME = "gunlukler.db";
     private static final int DATABASE_VERSION = 1;
 
+    // Günlükler tablosu ve kolonları
     public static final String TABLE_NAME = "gunlukler";
     public static final String COLUMN_ID = "_id";
     public static final String COLUMN_TITLE = "title";
     public static final String COLUMN_ENTRY = "entry";
     public static final String COLUMN_PHOTO_PATH = "photo_path";
-    public static final String COLUMN_DATE = "date";  // ✅ Tarih kolonu eklendi
+    public static final String COLUMN_DATE = "date";  // ✅ Tarih kolonu
 
+    // SQL tablo oluşturma cümleleri
     private static final String TABLE_CREATE =
             "CREATE TABLE " + TABLE_NAME + " (" +
                     COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
@@ -39,16 +46,19 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     "username TEXT UNIQUE, " +
                     "password TEXT);";
 
+    // Yapıcı (constructor)
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
+    // Veritabanı ilk kez oluşturulurken çağrılır
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(TABLE_CREATE);         // Günlükler tablosu
         db.execSQL(USER_TABLE_CREATE);    // Kullanıcılar tablosu
     }
 
+    // Veritabanı versiyonu değiştiğinde tabloyu yeniden oluşturur
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
@@ -56,7 +66,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    // ✅ Günlük eklerken TARİH de kaydediliyor
+    // ✅ Yeni bir günlük ekler (fotoğraf ve tarih dahil)
     public void insertDailyEntry(String title, String entry, String photoPath) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -64,7 +74,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(COLUMN_ENTRY, entry);
         values.put(COLUMN_PHOTO_PATH, photoPath);
 
-        // 📅 Bugünün tarihi
+        // Tarih bilgisi otomatik ekleniyor
         String currentDate = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault()).format(new Date());
         values.put(COLUMN_DATE, currentDate);
 
@@ -72,18 +82,20 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.close();
     }
 
-    // 🔹 Eski metod (dilersen silebilirsin)
+    // 🔹 Eski sürüm için (fotoğraf olmayan)
     @Deprecated
     public void insertDailyEntry(String title, String entry) {
         insertDailyEntry(title, entry, null);
     }
 
+    // Belirli bir başlığa ait günlüğü siler
     public void deleteDailyEntry(String title) {
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(TABLE_NAME, COLUMN_TITLE + " = ?", new String[]{title});
         db.close();
     }
 
+    // Başlığa göre günlük içeriğini getirir
     public String getEntryByTitle(String title) {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery("SELECT " + COLUMN_ENTRY + " FROM " + TABLE_NAME +
@@ -97,6 +109,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return "";
     }
 
+    // Başlığa göre fotoğraf yolunu getirir
     public String getPhotoPathByTitle(String title) {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery("SELECT " + COLUMN_PHOTO_PATH + " FROM " + TABLE_NAME +
@@ -110,6 +123,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return null;
     }
 
+    // Mevcut günlük kaydını günceller (içerik + fotoğraf)
     public void updateDailyEntry(String title, String newEntry, String photoPath) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -119,6 +133,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.close();
     }
 
+    // Yeni kullanıcı kaydı oluşturur
     public boolean registerUser(String username, String password) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -129,6 +144,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return result != -1;
     }
 
+    // Kullanıcı adı ve şifre kontrolü (giriş için)
     public boolean checkUser(String username, String password) {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery("SELECT * FROM users WHERE username=? AND password=?", new String[]{username, password});
@@ -138,7 +154,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return exists;
     }
 
-    // 🔹 Tüm başlıkları ve tarihleri birlikte getir
+    // 🔹 Tüm günlük başlıklarını ve tarihleri getirir (ListView için)
     public List<DailyItem> getAllItemsWithDates() {
         List<DailyItem> items = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
